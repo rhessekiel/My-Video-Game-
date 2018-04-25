@@ -110,7 +110,7 @@ drawSpiky(){
     triangle(this.rx+20,this.ry,this.rx+25,this.ry-10,this.rx+30,this.ry);
 
     noStroke();
-    fill(128,128,128);
+    fill(128,255,128);
     triangle(this.rx+30,this.ry,this.rx+35,this.ry-10,this.rx+40,this.ry);
 
     noStroke();
