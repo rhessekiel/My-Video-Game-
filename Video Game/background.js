@@ -1,16 +1,45 @@
-let rx;
-let ry;
+let playbutton;
+let button1;
+let button2;
+let button3;
+let personColor;
+// let started = false;
+
+let spike;
+let clouds = [];
+let spikes = [];
+let person;
+
 
 function setup() {
-createCanvas(800,500);
+  createCanvas(800,500);
 
+  spike = new Spiky(240,360);
+  spikes.push(spike);
+
+  person = new Character(100,295);
+  personColor = "white";
+
+  button1 = createButton('turn red');
+  button1.position(50, 40);
+  button1.mousePressed(buttonRed);
+  angleMode(DEGREES); // Change the mode to DEGREES
+
+
+  button2 = createButton('turn blue');
+  button2.position(50, 60);
+  button2.mousePressed(buttonBlue);
+  angleMode(DEGREES); // Change the mode to DEGREES
+
+  button3 = createButton('turn green');
+  button3.position(50, 80);
+  button3.mousePressed(buttonGreen);
+  angleMode(DEGREES); // Change the mode to DEGREES
 }
 
-
 function draw() {
-
-
   background(51,204,255);
+
 
   noStroke();
   fill(0,153,51);
@@ -24,40 +53,196 @@ function draw() {
   fill(0,0,0);
   line(0,400,800,400);
 
-  rx = 50;
-  ry = 50;
-  cloud();
+  if (frameCount % 120 == 0) {
+      let  c = new Cloud(random(750,800), random(50,300));
+      clouds.push(c);
+      console.log(clouds); //print the balls array to the console
+        }
 
-  rx = 350;
-  ry = 200;
-  cloud();
+  for (let i = 0; i < clouds.length; i++) {
+  	      clouds[i].drawCloud();
+          clouds[i].moveCloud();
+  	  }
 
-  rx = 600;
-  ry = 167;
-  cloud();
+  if (frameCount % 450 == 0) {
+    let s = new Spiky(random(750,800), 360);
+    spikes.push(s);
+    console.log(spikes);
+  }
 
-  rx = 150;
-  ry = 150;
-  cloud();
+  for (let i = 0; i < spikes.length; i++) {
+        spikes[i].drawSpiky();
+        spikes[i].moveSpiky();
+  }
 
-  rx = 450;
-  ry = 75;
-  cloud();
+  person.drawCharacter();
+  person.jumpCharacter();
+  person.dieCharacter();
 
-  rx = 140;
-  ry = 360;
-  new Spiky();
 
-  rx = 400;
-  ry = 360;
-  new Spiky();
-
-  new Character();
 }
 
-function cloud() {
+function buttonRed(){
+  print("red button pushed");
+  personColor = "red";
+}
+
+function buttonBlue(){
+  print("blue button pushed");
+  personColor = "blue";
+}
+
+function buttonGreen(){
+  print("green button pushed");
+  personColor = "green";
+}
 
 
+class Cloud {
+
+  constructor(x,y){
+    this.x = x;
+    this.y = y;
+  }
+
+  drawCloud(){
+    noStroke();
+    fill(255,255,255);
+    ellipse(this.x,this.y,20,20);
+    ellipse(this.x+10,this.y-10,20,20);
+    ellipse(this.x+10,this.y+10,20,20);
+    ellipse(this.x+20,this.y,20,20);
+    ellipse(this.x+25,this.y+15,20,20);
+    ellipse(this.x+30,this.y-10,20,20);
+    ellipse(this.x+40,this.y,20,20);
+    ellipse(this.x+35,this.y+10,20,20);
+  }
+
+  moveCloud(){
+    if(keyIsDown(RIGHT_ARROW)){
+      this.x = this.x - 3;
+    }
+    if(keyIsDown(LEFT_ARROW)){
+      this.x = this.x + 3;
+    }
+  }
+}
+
+class Spiky {
+
+  constructor(x,y){
+    this.x = x;
+    this.y = y;
+  }
+
+  drawSpiky(){
+    noStroke();
+    fill(0,0,153);
+    rect(this.x,this.y,80,40);
+    triangle(this.x,this.y,this.x,this.y+40,this.x-40,this.y+40);
+    triangle(this.x+80,this.y,this.x+80,this.y+40,this.x+120,this.y+40);
+
+    stroke(1);
+    fill(0,0,0);
+    line(this.x,this.y,this.x,this.y+40);
+    line(this.x+79,this.y,this.x+79,this.y+40);
+    line(this.x+40,this.y,this.x+40,this.y+40);
+    line(this.x-10,this.y+10,this.x+88,this.y+10); //line across
+    line(this.x-25,this.y+26,this.x+104,this.y+26); //line across
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x,this.y,this.x+5,this.y-10,this.x+10,this.y);
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x+10,this.y,this.x+15,this.y-10,this.x+20,this.y);
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x+20,this.y,this.x+25,this.y-10,this.x+30,this.y);
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x+30,this.y,this.x+35,this.y-10,this.x+40,this.y);
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x+40,this.y,this.x+45,this.y-10,this.x+50,this.y);
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x+50,this.y,this.x+55,this.y-10,this.x+60,this.y);
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x+60,this.y,this.x+65,this.y-10,this.x+70,this.y);
+
+    noStroke();
+    fill(128,128,128);
+    triangle(this.x+70,this.y,this.x+75,this.y-10,this.x+80,this.y);
+    }
+
+  moveSpiky(){
+       if(keyIsDown(RIGHT_ARROW)){
+         this.x = this.x - 2;
+       }
+       if(keyIsDown(LEFT_ARROW)){
+         this.x = this.x + 2;
+       }
+     }
+}
+
+class Character {
+
+  constructor(x,y){
+        this.x = x;
+        this.y = y;
+      //  this.color = color;
+  }
+
+  drawCharacter() { //original this.x = 30, this.y = 20
+
+    fill (personColor);
+    strokeWeight(1);
+    stroke("black");
+    beginShape();
+    rect(this.x, this.y, 55, 55);
+    rect(this.x, this.y + 55, 20, 50);
+    rect(this.x + 35, this.y + 55, 20, 50);
+    ellipse(this.x + 15, this.y + 15, 15, 15);
+    ellipse(this.x + 40, this.y + 15, 15, 15);
+    arc(this.x + 28, this.y + 30, 30, 30, 0, 180);
+    endShape();
+  }
+
+  jumpCharacter() {
+    if(keyIsDown(UP_ARROW)){
+      this.y = this.y - 2;
+    }
+    if(keyIsDown(DOWN_ARROW)){
+      this.y = this.y + 2;
+    }
+  }
+
+  dieCharacter(){
+
+    for (let i = 0; i < spikes.length; i++) {
+      if(this.x >= spikes[i].x  && this.x <= spikes[i].x + 80 && this.y <= spikes[i].y && this.y >= spikes[i].y - 10)  {
+          stroke("gray");
+          textSize(20);
+          text("game over", width/2, height/2);
+          console.log(spikes[i].x);
+
+
+        }
+      }
+}
+
+}
+
+
+function cloud(rx,ry){
   noStroke();
   fill(255,255,255);
   ellipse(rx,ry,20,20);
@@ -68,87 +253,4 @@ function cloud() {
   ellipse(rx+30,ry-10,20,20);
   ellipse(rx+40,ry,20,20);
   ellipse(rx+35,ry+10,20,20);
-
-
-}
-
-class Spiky {
-
-constructor(rx,ry){
-  this.rx = rx;
-  this.ry = ry;
-}
-
-drawSpiky(){
-  //original rx = 140
-  //original ry = 360
-
-    noStroke();
-    fill(0,0,153);
-    rect(this.rx,this.ry,80,40);
-    triangle(this.rx,this.ry,this.rx,this.ry+40,this.rx-40,this.ry+40);
-    triangle(this.rx+80,this.ry,this.rx+80,this.ry+40,this.rx+120,this.ry+40);
-
-    stroke(1);
-    fill(0,0,0);
-    line(this.rx,this.ry,this.rx,this.ry+40);
-    line(this.rx+79,this.ry,this.rx+79,this.ry+40);
-    line(this.rx+40,this.ry,this.rx+40,this.ry+40);
-    line(this.rx-13,this.ry+13,this.rx+92,this.ry+13); //line across
-    line(this.rx-25,this.ry+26,this.rx+104,this.ry+26); //line across
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx,this.ry,this.rx+5,this.ry-10,this.rx+10,this.ry);
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx+10,this.ry,this.rx+15,this.ry-10,this.rx+20,this.ry);
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx+20,this.ry,this.rx+25,this.ry-10,this.rx+30,this.ry);
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx+30,this.ry,this.rx+35,this.ry-10,this.rx+40,this.ry);
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx+40,this.ry,this.rx+45,this.ry-10,this.rx+50,this.ry);
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx+50,this.ry,this.rx+55,this.ry-10,this.rx+60,this.ry);
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx+60,this.ry,this.rx+65,this.ry-10,this.rx+70,this.ry);
-
-    noStroke();
-    fill(128,128,128);
-    triangle(this.rx+70,this.ry,this.rx+75,this.ry-10,this.rx+80,this.ry);
-
-    }
-}
-
-class Character{
-
-  constructor(x,y){
-        this.x = x;
-        this.y = y;
-
-  }
-
-  drawCharacter(){  // draw a ball on the screen at x,y
-    		stroke(0);
-        strokeWeight(3);
-    		fill(250,131,32);
-		    ellipse(this.x,this.y,30,30);
-        stroke(0,0,0);
-        bezier(this.x + 12, this.y - 8,this.x + 6,this.y - 3,this.x + 6, this.y + 3, this.x + 12, this.y + 9);
-        bezier(this.x - 12, this.y + 8, this.x - 6, this.y + 3, this.x - 6, this.y - 3, this.x - 12, this.y - 9);
-        bezier(this.x, this.y + 15, this.x - 2, this.y + 3, this.x - 2, this.y - 3, this.x, this.y -15);
-	}
-
 }
